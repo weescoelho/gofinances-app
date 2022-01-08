@@ -1,6 +1,9 @@
-import React from 'react';
-import { HighlightCard } from '../../components/HighlightCard';
-import { TransactionCard, TransactionCardData } from '../../components/TransactionCard';
+import React from "react";
+import { HighlightCard } from "../../components/HighlightCard";
+import {
+  TransactionCard,
+  TransactionCardData,
+} from "../../components/TransactionCard";
 
 import {
   Container,
@@ -16,7 +19,7 @@ import {
   Transactions,
   Title,
   TransactionsList,
-} from './styles';
+} from "./styles";
 
 export interface DataListProps extends TransactionCardData {
   id: string;
@@ -25,37 +28,37 @@ export interface DataListProps extends TransactionCardData {
 export function Dashboard() {
   const data: DataListProps[] = [
     {
-      id:'1',
-      type: 'positive',
-      title: 'Desenvolvimento de app',
-      amount: 'R$ 10,00',
+      id: "1",
+      type: "positive",
+      title: "Desenvolvimento de app",
+      amount: "R$ 10,00",
       category: {
-        name: 'Vendas',
-        icon: 'dollar-sign',
+        name: "Vendas",
+        icon: "dollar-sign",
       },
-      date: '10/10/2020',
+      date: "10/10/2020",
     },
     {
-      id:'2',
-      type: 'negative',
-      title: 'Ifood',
-      amount: 'R$ 10,00',
+      id: "2",
+      type: "negative",
+      title: "Ifood",
+      amount: "R$ 10,00",
       category: {
-        name: 'Alimentação',
-        icon: 'coffee',
+        name: "Alimentação",
+        icon: "coffee",
       },
-      date: '05/10/2020',
+      date: "05/10/2020",
     },
     {
-      id:'3',
-      type: 'negative',
-      title: 'Aluguel do apartamento',
-      amount: 'R$ 10,00',
+      id: "3",
+      type: "negative",
+      title: "Aluguel do apartamento",
+      amount: "R$ 10,00",
       category: {
-        name: 'Casa',
-        icon: 'shopping-bag',
+        name: "Casa",
+        icon: "shopping-bag",
       },
-      date: '11/10/2020',
+      date: "11/10/2020",
     },
   ];
 
@@ -66,7 +69,7 @@ export function Dashboard() {
           <UserInfo>
             <Photo
               source={{
-                uri: 'https://avatars.githubusercontent.com/u/68740380?v=4',
+                uri: "https://avatars.githubusercontent.com/u/68740380?v=4",
               }}
             />
             <User>
@@ -101,8 +104,10 @@ export function Dashboard() {
         <Title>Listagem</Title>
         <TransactionsList
           data={data}
-          keyExtractor={(item: DataListProps) => item.id }
-          renderItem={({ item }) => <TransactionCard data={item as DataListProps} />}
+          keyExtractor={(item: DataListProps) => item.id}
+          renderItem={({ item }) => (
+            <TransactionCard data={item as DataListProps} />
+          )}
         />
       </Transactions>
     </Container>
