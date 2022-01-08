@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { HighlightCard } from "../../components/HighlightCard";
 import {
   TransactionCard,
   TransactionCardData,
 } from "../../components/TransactionCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
   Container,
@@ -21,47 +23,54 @@ import {
   TransactionsList,
   LogoutButton,
 } from "./styles";
+import { collectionsKey } from "../../storage";
 
 export interface DataListProps extends TransactionCardData {
   id: string;
 }
 
 export function Dashboard() {
-  const data: DataListProps[] = [
-    {
-      id: "1",
-      type: "positive",
-      title: "Desenvolvimento de app",
-      amount: "R$ 10,00",
-      category: {
-        name: "Vendas",
-        icon: "dollar-sign",
+  const [data, setData] = useState<DataListProps[]>();
+
+  async function loadTransactionData() {
+    const response = await AsyncStorage.getItem(collectionsKey.transactions);
+    const transactions = response ? JSON.parse(response) : [];
+
+    const transactionFormatted: DataListProps[] = transactions.map(
+      (item: DataListProps) => {
+        const amount = Number(item.amount).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
+
+        const dateFormatted = new Intl.DateTimeFormat("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        }).format(new Date(item.date));
+
+        return {
+          id: item.id,
+          name: item.name,
+          amount,
+          category: item.category,
+          transactionType: item.transactionType,
+          date: dateFormatted,
+        };
       },
-      date: "10/10/2020",
-    },
-    {
-      id: "2",
-      type: "negative",
-      title: "Ifood",
-      amount: "R$ 10,00",
-      category: {
-        name: "Alimentação",
-        icon: "coffee",
-      },
-      date: "05/10/2020",
-    },
-    {
-      id: "3",
-      type: "negative",
-      title: "Aluguel do apartamento",
-      amount: "R$ 10,00",
-      category: {
-        name: "Casa",
-        icon: "shopping-bag",
-      },
-      date: "11/10/2020",
-    },
-  ];
+    );
+    setData(transactionFormatted);
+  }
+
+  useEffect(() => {
+    loadTransactionData();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactionData();
+    }, []),
+  );
 
   return (
     <Container>
