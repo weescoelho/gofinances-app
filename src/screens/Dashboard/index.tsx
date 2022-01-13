@@ -49,7 +49,7 @@ interface IHighlightCardData {
 }
 
 export function Dashboard() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataListProps[]>();
@@ -80,7 +80,9 @@ export function Dashboard() {
   }
 
   async function loadTransactionData() {
-    const response = await AsyncStorage.getItem(collectionsKey.transactions);
+    const response = await AsyncStorage.getItem(
+      collectionsKey.user_transactions(user.id),
+    );
     const transactions = response ? JSON.parse(response) : [];
 
     let entriesTotal = 0;
@@ -190,7 +192,7 @@ export function Dashboard() {
                   <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power" />
               </LogoutButton>
             </UserWrapper>

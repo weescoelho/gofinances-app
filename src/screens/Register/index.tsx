@@ -21,6 +21,7 @@ import {
   TransactionsTypes,
 } from "./styles";
 import { collectionsKey } from "../../storage";
+import { useAuth } from "../../hooks/auth";
 
 interface FormData {
   name: string;
@@ -42,6 +43,7 @@ export const Register: React.FC = () => {
   });
   const [transactionType, setTransactionType] = useState("");
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const { user } = useAuth();
 
   const navigation = useNavigation();
 
@@ -81,13 +83,13 @@ export const Register: React.FC = () => {
     };
     try {
       const storageData = await AsyncStorage.getItem(
-        collectionsKey.transactions,
+        collectionsKey.user_transactions(user.id),
       );
       const currentData = storageData ? JSON.parse(storageData) : [];
       const dataToUpdate = [...currentData, newTransaction];
 
       await AsyncStorage.setItem(
-        collectionsKey.transactions,
+        collectionsKey.user_transactions(user.id),
         JSON.stringify(dataToUpdate),
       );
 
@@ -103,7 +105,7 @@ export const Register: React.FC = () => {
       Alert.alert("Não foi possível salvar");
     }
   }
-  
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Container>

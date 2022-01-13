@@ -24,6 +24,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { addMonths, subMonths, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useAuth } from "../../hooks/auth";
 
 interface StorageData {
   transactionType: "positive" | "negative";
@@ -44,9 +45,12 @@ interface CategoryData {
 
 export const Resume: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
+  const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
+    [],
+  );
   const [isLoading, setIsLoading] = useState(false);
   const theme = useTheme();
+  const { user } = useAuth();
 
   function handleDateChange(action: "next" | "prev") {
     if (action === "next") {
@@ -60,7 +64,9 @@ export const Resume: React.FC = () => {
 
   async function loadData() {
     setIsLoading(true);
-    const storageData = await AsyncStorage.getItem(collectionsKey.transactions);
+    const storageData = await AsyncStorage.getItem(
+      collectionsKey.user_transactions(user.id),
+    );
     const storageDataFormatted: StorageData[] = storageData
       ? JSON.parse(storageData)
       : [];
