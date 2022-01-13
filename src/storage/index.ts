@@ -1,3 +1,4 @@
 export const collectionsKey = {
-  transactions:'@gofinances:transactions'
+  transactions: '@gofinances:transactions',
+  user:'@gofinances:user'
 }
