@@ -26,6 +26,7 @@ import {
   LoadContainer,
 } from "./styles";
 import { collectionsKey } from "../../storage";
+import { useAuth } from "../../hooks/auth";
 
 export interface DataListProps extends TransactionCardData {
   id: string;
@@ -47,6 +48,7 @@ interface IHighlightCardData {
 }
 
 export function Dashboard() {
+  const { user } = useAuth();
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataListProps[]>();
@@ -174,12 +176,12 @@ export function Dashboard() {
               <UserInfo>
                 <Photo
                   source={{
-                    uri: "https://avatars.githubusercontent.com/u/68740380?v=4",
+                    uri: user.photo,
                   }}
                 />
                 <User>
                   <UserGreeting>Olá,</UserGreeting>
-                  <UserName>Weslley</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
               <LogoutButton onPress={() => {}}>

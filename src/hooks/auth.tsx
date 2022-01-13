@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
@@ -31,6 +37,16 @@ export const AuthContext = createContext({} as IAuthContextData);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User>();
+  const [userStorageLoading, setUserStorageLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      const storageUser = await AsyncStorage.getItem(collectionsKey.user);
+      setUser(JSON.parse(storageUser));
+      setUserStorageLoading(false);
+    }
+    loadData();
+  }, []);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
