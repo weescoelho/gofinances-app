@@ -27,6 +27,7 @@ import {
 } from "./styles";
 import { collectionsKey } from "../../storage";
 import { useAuth } from "../../hooks/auth";
+import { isValid } from "date-fns";
 
 export interface DataListProps extends TransactionCardData {
   id: string;
@@ -74,7 +75,8 @@ export function Dashboard() {
         year: "2-digit",
       },
     );
-    return lastTransactionToDate;
+
+    return isValid(lastTransaction) ? lastTransactionToDate : null;
   }
 
   async function loadTransactionData() {
@@ -97,11 +99,15 @@ export function Dashboard() {
           currency: "BRL",
         });
 
-        const dateFormatted = new Intl.DateTimeFormat("pt-BR", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "2-digit",
-        }).format(new Date(item.date));
+        let dateFormatted;
+
+        if (item.date) {
+          dateFormatted = new Intl.DateTimeFormat("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+          }).format(new Date(item.date));
+        }
 
         return {
           id: item.id,
@@ -194,13 +200,21 @@ export function Dashboard() {
               type="up"
               title="Entradas"
               amount={highlightCardData.entries.amount}
-              lastTransaction={`Última transação em ${highlightCardData.entries.lastTransactionDate}`}
+              lastTransaction={
+                highlightCardData.entries.lastTransactionDate
+                  ? `Última transação em ${highlightCardData.entries.lastTransactionDate}`
+                  : ""
+              }
             />
             <HighlightCard
               type="down"
               title="Saídas"
               amount={highlightCardData.expensives.amount}
-              lastTransaction={`Última transação em ${highlightCardData.expensives.lastTransactionDate}`}
+              lastTransaction={
+                highlightCardData.expensives.lastTransactionDate
+                  ? `Última transação em ${highlightCardData.expensives.lastTransactionDate}`
+                  : ""
+              }
             />
             <HighlightCard
               type="total"
